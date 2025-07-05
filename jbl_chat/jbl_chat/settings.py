@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-(258e=*mmkc&ilwz_=cokrm9d!+z66nn_eoyw*u#@yv@e$2*zi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]  # noqa: S104
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "testserver"]  # noqa: S104
 
 
 # Application definition
@@ -53,7 +53,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "jbl_chat.urls"
+if os.getenv("ENVIRONMENT") == "testing":
+    ROOT_URLCONF = "jbl_chat.jbl_chat.urls"
+else:
+    ROOT_URLCONF = "jbl_chat.urls"
 
 TEMPLATES = [
     {

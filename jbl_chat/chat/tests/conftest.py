@@ -5,6 +5,7 @@ from pathlib import Path
 import django
 import pytest
 from django.core.management import call_command
+from django.test import Client
 
 sys.path.append(Path(__file__).resolve().parent.parent.parent.as_posix())
 
@@ -29,3 +30,8 @@ def django_cleanup_and_migrate():
 @pytest.fixture(autouse=True)
 def flush_db_before_test():
     call_command("flush", interactive=False)
+
+
+@pytest.fixture
+def client():
+    return Client()
