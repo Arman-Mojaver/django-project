@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-.PHONY: help up down build freeze bash pytest pgadmin
+.PHONY: help up down build freeze bash migrations migrate pytest superuser-dev superuser-prod admin pgadmin
 
 .DEFAULT_GOAL := help
 
@@ -53,6 +53,22 @@ migrate:  ## Run migrate (development + production)
 pytest:  ## Run pytest
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"python -m pytest"
+
+
+superuser-dev:
+	export ENVIRONMENT=development && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py createsuperuser"
+
+
+superuser-prod:
+	export ENVIRONMENT=development && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py createsuperuser"
+
+
+admin:  ## Open Django admin page
+	open http://localhost:8000/admin
 
 
 pgadmin:  ## Open pgadmin
