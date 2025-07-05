@@ -92,3 +92,7 @@ admin:  ## Open Django admin page
 
 pgadmin:  ## Open pgadmin
 	open http://localhost:8082
+
+
+web:  ## Open web
+	open http://localhost:8000
