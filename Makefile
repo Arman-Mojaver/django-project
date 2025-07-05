@@ -32,3 +32,7 @@ freeze:  ## Run pip freeze (requirements.txt)
 
 bash:
 	docker compose -f docker-compose.yml run --rm -it web bash -c "cd jbl_chat && exec bash"
+
+pytest:  ## Run pytest
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"python -m pytest"
