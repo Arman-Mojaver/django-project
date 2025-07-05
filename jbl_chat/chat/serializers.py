@@ -12,4 +12,4 @@ class UserSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:  # noqa: D106
         model = Message
-        fields = "__all__"
+        fields = ("id", "content", "sender_id", "recipient_id", "created_at")
