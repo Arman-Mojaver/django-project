@@ -33,6 +33,23 @@ freeze:  ## Run pip freeze (requirements.txt)
 bash:
 	docker compose -f docker-compose.yml run --rm -it web bash -c "cd jbl_chat && exec bash"
 
+
+migrations:  ## Run migrations (development)
+	export ENVIRONMENT=development && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py makemigrations"
+
+
+migrate:  ## Run migrate (development + production)
+	export ENVIRONMENT=development && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py migrate"
+
+	export ENVIRONMENT=production && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py migrate"
+
+
 pytest:  ## Run pytest
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"python -m pytest"
