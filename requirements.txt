@@ -1,2 +1,5 @@
-Django==3.2.8  # https://www.djangoproject.com/
-djangorestframework==3.12.4  # https://github.com/encode/django-rest-framework
+asgiref==3.9.0
+Django==3.2.8
+djangorestframework==3.12.4
+pytz==2025.2
+sqlparse==0.5.3
