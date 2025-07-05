@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-.PHONY: help up down build freeze
+.PHONY: help up down build freeze bash
 
 .DEFAULT_GOAL := help
 
@@ -28,3 +28,7 @@ build:  ## Build image
 
 freeze:  ## Run pip freeze (requirements.txt)
 	pip freeze > requirements.txt
+
+
+bash:
+	docker compose -f docker-compose.yml run --rm -it web bash -c "cd jbl_chat && exec bash"
