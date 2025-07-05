@@ -61,3 +61,24 @@ services:
       - ./compose/db_testing/db_testing_data:/var/lib/postgresql/data
     ports:
       - "54321:54321"
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:8.13.0
+    restart: unless-stopped
+    user: root
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=postgres@example.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+    volumes:
+      - ./compose/pgadmin/servers.json:/pgadmin4/servers.json
+      - ./compose/pgadmin/.pgpass:/.pgpass
+      - ./compose/pgadmin/pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "8082:80"
+    depends_on:
+      - db-development
+      - db-production
+      - db-testing
