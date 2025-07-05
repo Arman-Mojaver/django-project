@@ -1,6 +1,7 @@
 SHELL = /bin/bash
 
-.PHONY: help up down build freeze bash migrations migrate pytest superuser-dev superuser-prod admin pgadmin
+.PHONY: help up down build freeze bash migrations migrate pytest superuser-dev \
+        superuser-prod seed-dev seed-prod flush-dev admin pgadmin
 
 .DEFAULT_GOAL := help
 
@@ -65,6 +66,24 @@ superuser-prod:
 	export ENVIRONMENT=development && \
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"cd jbl_chat && python manage.py createsuperuser"
+
+
+seed-dev:
+	export ENVIRONMENT=development && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py seed"
+
+
+seed-prod:
+	export ENVIRONMENT=production && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py seed"
+
+
+flush-dev:
+	export ENVIRONMENT=development && \
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"cd jbl_chat && python manage.py flush"
 
 
 admin:  ## Open Django admin page
