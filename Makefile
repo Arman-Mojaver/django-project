@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-.PHONY: help up down build freeze bash
+.PHONY: help up down build freeze bash pytest pgadmin
 
 .DEFAULT_GOAL := help
 
@@ -36,3 +36,7 @@ bash:
 pytest:  ## Run pytest
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"python -m pytest"
+
+
+pgadmin:  ## Open pgadmin
+	open http://localhost:8082
