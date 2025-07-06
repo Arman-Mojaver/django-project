@@ -6,6 +6,7 @@
 </head>
 
 <body>
+  <a href="/login/" class="signout-link">Sign Out</a>
   <a href="/users/{{ user_id }}/" style="display: inline-block; margin-bottom: 1rem;">Users</a>
 
   <h1>User: {{ user_fullname }} (ID: {{ user_id }})</h1>
@@ -91,5 +92,14 @@
   #error {
     color: red;
     margin-top: 1rem;
+  }
+</style>
+
+<style>
+  .signout-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: sans-serif;
   }
 </style>

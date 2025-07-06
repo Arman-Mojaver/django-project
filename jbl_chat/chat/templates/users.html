@@ -3,8 +3,12 @@
 <head>
   <title>Users</title>
   <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+
 </head>
 <body>
+
+  <a href="/login/" class="signout-link">Sign Out</a>
+
   <h1>User: {{ user_fullname }} (ID: {{ user_id }})</h1>
 
   <h2>Other Users</h2>
@@ -22,33 +26,42 @@
     <tbody>
       <tr><td colspan="3">Loading…</td></tr>
     </tbody>
-
   </table>
 
-  <script>
-    const currentUserId = {{ user_id }};
-
-    function renderTable(responseText) {
-      const { data } = JSON.parse(responseText);
-      const tbody = document.querySelector('#users-table tbody');
-      tbody.innerHTML = '';
-
-      if (!data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3"><em>No users found.</em></td></tr>';
-        return;
-      }
-
-      data.forEach(u => {
-        const tr = document.createElement('tr');
-        const href = `/messages/${currentUserId}/${u.id}/`;
-        tr.innerHTML = `
-          <td>${u.id}</td>
-          <td><a href="${href}">${u.fullname}</a></td>
-          <td>${u.email}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-  </script>
 </body>
 </html>
+
+<script>
+  const currentUserId = {{ user_id }};
+
+  function renderTable(responseText) {
+    const { data } = JSON.parse(responseText);
+    const tbody = document.querySelector('#users-table tbody');
+    tbody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3"><em>No users found.</em></td></tr>';
+      return;
+    }
+
+    data.forEach(u => {
+      const tr = document.createElement('tr');
+      const href = `/messages/${currentUserId}/${u.id}/`;
+      tr.innerHTML = `
+        <td>${u.id}</td>
+        <td><a href="${href}">${u.fullname}</a></td>
+        <td>${u.email}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+</script>
+
+<style>
+  .signout-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: sans-serif;
+  }
+</style>
