@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>Messages Between Users</title>
+  <script>
+    const userId = {{ user_id }};
+    const otherUserId = {{ other_user_id }};
+    const userFullname = "{{ user_fullname }}";
+    const otherUserFullname = "{{ other_user_fullname }}";
+  </script>
 </head>
 
 <body>
@@ -32,8 +38,6 @@
 
 <script>
   (function() {
-    const userId = {{ user_id }};
-    const otherUserId = {{ other_user_id }};
     const endpoint = `/api/messages/${userId}/${otherUserId}/`;
 
     const tableBody = document.querySelector('#messages-table tbody');
@@ -58,8 +62,8 @@
           <tr>
             <td>${msg.id}</td>
             <td>${msg.content}</td>
-            <td>${msg.sender_id}</td>
-            <td>${msg.recipient_id}</td>
+            <td>${msg.sender_id === userId ? userFullname : otherUserFullname}</td>
+            <td>${msg.recipient_id === userId ? userFullname : otherUserFullname}</td>
             <td>${new Date(msg.created_at).toLocaleString()}</td>
           </tr>
         `).join('');

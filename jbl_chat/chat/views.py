@@ -126,5 +126,6 @@ def messages(
         "user_id": user.id,
         "user_fullname": user.fullname,
         "other_user_id": other_user.id,
+        "other_user_fullname": other_user.fullname,
     }
     return render(request, "messages.html", context)
