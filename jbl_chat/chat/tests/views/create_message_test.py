@@ -14,6 +14,7 @@ def test_sender_user_non_existent(user_recipient, fake_id, client):
     content = parse_content(response)
 
     assert content == {"error": f"Sender user does not exist. ID: {fake_id}"}
+    assert response.status_code == 404
 
 
 def test_recipient_user_non_existent(user_sender, fake_id, client):
@@ -25,6 +26,7 @@ def test_recipient_user_non_existent(user_sender, fake_id, client):
     content = parse_content(response)
 
     assert content == {"error": f"Recipient user does not exist. ID: {fake_id}"}
+    assert response.status_code == 404
 
 
 def test_invalid_content(user_sender, user_recipient, client):
@@ -37,6 +39,7 @@ def test_invalid_content(user_sender, user_recipient, client):
     content = parse_content(response)
 
     assert content == {"error": "Invalid content: None"}
+    assert response.status_code == 400
 
 
 def test_create_message(user_sender, user_recipient, message_data_1, client):
@@ -62,3 +65,5 @@ def test_create_message(user_sender, user_recipient, message_data_1, client):
     assert (
         DateTimeField().to_representation(db_message.created_at) == message["created_at"]
     )
+
+    assert response.status_code == 200

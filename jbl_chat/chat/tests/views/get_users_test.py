@@ -6,6 +6,7 @@ def test_non_existent(fake_id, client):
     content = parse_content(response)
 
     assert content == {"error": f"User does not exist. ID: {fake_id}"}
+    assert response.status_code == 404
 
 
 def test_one_user(user_1, client):
@@ -13,6 +14,7 @@ def test_one_user(user_1, client):
     content = parse_content(response)
 
     assert content == {"data": []}
+    assert response.status_code == 200
 
 
 def test_two_users(user_1, user_2, user_data_2, client):
@@ -28,6 +30,7 @@ def test_two_users(user_1, user_2, user_data_2, client):
     ]
 
     assert content == {"data": expected_users}
+    assert response.status_code == 200
 
 
 def test_several_users(user_1, user_data_1, user_2, user_3, user_data_3, client):  # noqa: PLR0913
@@ -48,3 +51,4 @@ def test_several_users(user_1, user_data_1, user_2, user_3, user_data_3, client)
     ]
 
     assert content == {"data": expected_users}
+    assert response.status_code == 200

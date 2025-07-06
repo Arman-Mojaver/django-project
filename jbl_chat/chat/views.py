@@ -15,7 +15,7 @@ def index(_request: HttpRequest) -> JsonResponse:
 def get_users(_request: HttpRequest, user_id: int) -> JsonResponse:
     user = User.objects.filter(id=user_id).first()
     if not user:
-        return JsonResponse({"error": f"User does not exist. ID: {user_id}"})
+        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
 
     users = User.objects.exclude(id=user_id).all()
 
@@ -27,12 +27,16 @@ def get_users(_request: HttpRequest, user_id: int) -> JsonResponse:
 def get_messages(_request: HttpRequest, sender_id: int, recipient_id: int):  # noqa: ANN201
     sender_user = User.objects.filter(id=sender_id).first()
     if not sender_user:
-        return JsonResponse({"error": f"Sender user does not exist. ID: {sender_id}"})
+        return JsonResponse(
+            {"error": f"Sender user does not exist. ID: {sender_id}"},
+            status=404,
+        )
 
     recipient_user = User.objects.filter(id=recipient_id).first()
     if not recipient_user:
         return JsonResponse(
-            {"error": f"Recipient user does not exist. ID: {recipient_id}"}
+            {"error": f"Recipient user does not exist. ID: {recipient_id}"},
+            status=404,
         )
 
     messages = Message.objects.filter(
@@ -48,19 +52,23 @@ def get_messages(_request: HttpRequest, sender_id: int, recipient_id: int):  # n
 def create_message(request: HttpRequest, sender_id: int, recipient_id: int):  # noqa: ANN201
     sender_user = User.objects.filter(id=sender_id).first()
     if not sender_user:
-        return JsonResponse({"error": f"Sender user does not exist. ID: {sender_id}"})
+        return JsonResponse(
+            {"error": f"Sender user does not exist. ID: {sender_id}"},
+            status=404,
+        )
 
     recipient_user = User.objects.filter(id=recipient_id).first()
     if not recipient_user:
         return JsonResponse(
-            {"error": f"Recipient user does not exist. ID: {recipient_id}"}
+            {"error": f"Recipient user does not exist. ID: {recipient_id}"},
+            status=404,
         )
 
     data = json.loads(request.body)
     content = data.get("content")
 
     if content is None:
-        return JsonResponse({"error": f"Invalid content: {content}"})
+        return JsonResponse({"error": f"Invalid content: {content}"}, status=400)
 
     message = Message.objects.create(
         content=content,
