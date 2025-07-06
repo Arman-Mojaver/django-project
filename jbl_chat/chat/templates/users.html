@@ -5,10 +5,9 @@
   <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 </head>
 <body>
-  <h1>Welcome {{ user_fullname }} (ID: {{ user_id }})</h1>
+  <h1>User: {{ user_fullname }} (ID: {{ user_id }})</h1>
 
   <h2>Other Users</h2>
-
   <table
     id="users-table"
     hx-get="/api/users/{{ user_id }}/"

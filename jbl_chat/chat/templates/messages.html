@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Messages Between Users</title>
+</head>
+
+<body>
+  <h1>User: {{ user_fullname }} (ID: {{ user_id }})</h1>
+
+  <h1>Messages</h1>
+  <div id="error"></div>
+  <table id="messages-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Content</th>
+        <th>Sender</th>
+        <th>Recipient</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+</body>
+</html>
+
+<script>
+  (function() {
+    const userId = {{ user_id }};
+    const otherUserId = {{ other_user_id }};
+    const endpoint = `/api/messages/${userId}/${otherUserId}/`;
+
+    const tableBody = document.querySelector('#messages-table tbody');
+    const errorDiv = document.getElementById('error');
+
+    fetch(endpoint)
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.error || 'Failed to fetch messages');
+          });
+        }
+        return response.json();
+      })
+      .then(json => {
+        const messages = json.data || [];
+        if (messages.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="5">No messages found.</td></tr>';
+          return;
+        }
+        tableBody.innerHTML = messages.map(msg => `
+          <tr>
+            <td>${msg.id}</td>
+            <td>${msg.content}</td>
+            <td>${msg.sender_id}</td>
+            <td>${msg.recipient_id}</td>
+            <td>${new Date(msg.created_at).toLocaleString()}</td>
+          </tr>
+        `).join('');
+      })
+      .catch(err => {
+        errorDiv.textContent = err.message;
+        tableBody.innerHTML = '';
+      });
+  })();
+</script>
+
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 2rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  th {
+    background-color: #f4f4f4;
+  }
+  #error {
+    color: red;
+    margin-top: 1rem;
+  }
+</style>
