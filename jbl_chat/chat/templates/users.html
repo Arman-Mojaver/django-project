@@ -40,9 +40,10 @@
 
       data.forEach(u => {
         const tr = document.createElement('tr');
+        const href = `/messages/${currentUserId}/${u.id}/`;
         tr.innerHTML = `
           <td>${u.id}</td>
-          <td>${u.fullname}</td>
+          <td><a href="${href}">${u.fullname}</a></td>
           <td>${u.email}</td>
         `;
         tbody.appendChild(tr);
