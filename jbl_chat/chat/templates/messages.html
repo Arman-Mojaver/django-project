@@ -1,41 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Messages Between Users</title>
-  <script>
-    const userId = {{ user_id }};
-    const otherUserId = {{ other_user_id }};
-    const userFullname = "{{ user_fullname }}";
-    const otherUserFullname = "{{ other_user_fullname }}";
-  </script>
-</head>
+{% extends "base.html" %}
 
-<body>
-  <a href="/login/" class="signout-link">Sign Out</a>
-  <a href="/users/{{ user_id }}/" style="display: inline-block; margin-bottom: 1rem;">Users</a>
+{% block title %}Messages{% endblock %}
 
-  <h1>User: {{ user_fullname }} (ID: {{ user_id }})</h1>
+{% block head_extra %}
+<script>
+  const userId = {{ user_id }};
+  const otherUserId = {{ other_user_id }};
+  const userFullname = "{{ user_fullname }}";
+  const otherUserFullname = "{{ other_user_fullname }}";
+</script>
+{% endblock %}
 
-  <h1>Messages</h1>
-  <div id="error"></div>
-  <table id="messages-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Content</th>
-        <th>Sender</th>
-        <th>Recipient</th>
-        <th>Created At</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
+{% block content %}
+<a href="/users/{{ user_id }}/" style="display: inline-block; margin-bottom: 1rem;">Users</a>
 
-</body>
-</html>
+<h2>Messages</h2>
+<div id="error"></div>
+<table id="messages-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Content</th>
+      <th>Sender</th>
+      <th>Recipient</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+{% endblock %}
 
+{% block scripts %}
 <script>
   (function() {
     const endpoint = `/api/messages/${userId}/${otherUserId}/`;
@@ -74,36 +70,4 @@
       });
   })();
 </script>
-
-<style>
-  body {
-    font-family: sans-serif;
-    margin: 2rem;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-  th, td {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-  th {
-    background-color: #f4f4f4;
-  }
-  #error {
-    color: red;
-    margin-top: 1rem;
-  }
-</style>
-
-<style>
-  .signout-link {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-family: sans-serif;
-  }
-</style>
+{% endblock %}

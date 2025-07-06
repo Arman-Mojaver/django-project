@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Chat App{% endblock %}</title>
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <div class="top-bar">
+    <span class="user-info">{{ user_fullname }} (ID: {{ user_id }})</span>
+    <a href="/login/" class="signout-link">Sign Out</a>
+  </div>
+
+  {% block content %}{% endblock %}
+  {% block scripts %}{% endblock %}
+</body>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 2rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  #error {
+    color: red;
+    margin-top: 1rem;
+  }
+
+  .top-bar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between username and sign out link */
+  font-family: sans-serif;
+}
+
+.user-info {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.signout-link {
+  font-size: 0.95rem;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+
+
+
+</style>
