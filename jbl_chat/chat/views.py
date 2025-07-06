@@ -152,6 +152,7 @@ def message_list_partial(
         "messages": messages,
         "user_fullname": user.fullname,
         "other_user_fullname": other_user.fullname,
+        "user_id": user.id,
     }
 
     return render(request, "partials/message_list.html", context)
@@ -181,6 +182,7 @@ def message_create_partial(
         "message": message,
         "user_fullname": user.fullname,
         "other_user_fullname": other_user.fullname,
+        "user_id": user.id,
     }
 
     return render(request, "partials/message_row.html", context)

@@ -1,7 +1,7 @@
 <tr id="message-{{ message.id }}">
   <td>{{ message.id }}</td>
   <td>{{ message.content|escape }}</td>
-  <td>{% if message.sender_id == request.user.id %}{{ user_fullname }}{% else %}{{ other_user_fullname }}{% endif %}</td>
-  <td>{% if message.recipient_id == request.user.id %}{{ user_fullname }}{% else %}{{ other_user_fullname }}{% endif %}</td>
+  <td>{% if message.sender_id == user_id %}{{ user_fullname }}{% else %}{{ other_user_fullname }}{% endif %}</td>
+  <td>{% if message.recipient_id == user_id %}{{ user_fullname }}{% else %}{{ other_user_fullname }}{% endif %}</td>
   <td>{{ message.created_at|date:"Y-m-d H:i:s" }}</td>
 </tr>
