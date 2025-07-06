@@ -1,68 +1,30 @@
 import json
 
-import pytest
-from chat.models import Message, User
+from chat.models import Message
 from chat.utils.http_utils import parse_content
 from rest_framework.fields import DateTimeField
 
-NON_EXISTENT_USER_ID = 12345678
 
-
-@pytest.fixture
-def user_sender_data():
-    return {"fullname": "User Usersson", "email": "userusersson@mail.com"}
-
-
-@pytest.fixture
-def user_recipient_data():
-    return {"fullname": "User Usersson2", "email": "userusersson2@mail.com"}
-
-
-@pytest.fixture
-def user_sender(user_sender_data):
-    user = User(**user_sender_data)
-    user.save()
-    return user
-
-
-@pytest.fixture
-def user_recipient(user_recipient_data):
-    user = User(**user_recipient_data)
-    user.save()
-    return user
-
-
-@pytest.fixture
-def message_data_1(user_sender, user_recipient):
-    return {
-        "content": "Hello, how are you?",
-        "sender_id": user_sender.id,
-        "recipient_id": user_recipient.id,
-    }
-
-
-def test_sender_user_non_existent(user_recipient, client):
+def test_sender_user_non_existent(user_recipient, fake_id, client):
     data = {"content": "some content"}
     response = client.post(
-        f"/message/{NON_EXISTENT_USER_ID}/{user_recipient.id}/",
+        f"/message/{fake_id}/{user_recipient.id}/",
         data=data,
     )
     content = parse_content(response)
 
-    assert content == {"error": f"Sender user does not exist. ID: {NON_EXISTENT_USER_ID}"}
+    assert content == {"error": f"Sender user does not exist. ID: {fake_id}"}
 
 
-def test_recipient_user_non_existent(user_sender, client):
+def test_recipient_user_non_existent(user_sender, fake_id, client):
     data = {"content": "some content"}
     response = client.post(
-        f"/message/{user_sender.id}/{NON_EXISTENT_USER_ID}/",
+        f"/message/{user_sender.id}/{fake_id}/",
         data=data,
     )
     content = parse_content(response)
 
-    assert content == {
-        "error": f"Recipient user does not exist. ID: {NON_EXISTENT_USER_ID}"
-    }
+    assert content == {"error": f"Recipient user does not exist. ID: {fake_id}"}
 
 
 def test_invalid_content(user_sender, user_recipient, client):

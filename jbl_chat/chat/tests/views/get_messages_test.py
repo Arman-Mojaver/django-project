@@ -1,121 +1,19 @@
-import pytest
-from chat.models import Message, User
 from chat.utils.http_utils import parse_content
 from rest_framework.fields import DateTimeField
 
-NON_EXISTENT_USER_ID = 12345678
 
-
-@pytest.fixture
-def user_sender_data():
-    return {"fullname": "User Usersson", "email": "userusersson@mail.com"}
-
-
-@pytest.fixture
-def user_recipient_data():
-    return {"fullname": "User Usersson2", "email": "userusersson2@mail.com"}
-
-
-@pytest.fixture
-def user_sender(user_sender_data):
-    user = User(**user_sender_data)
-    user.save()
-    return user
-
-
-@pytest.fixture
-def user_recipient(user_recipient_data):
-    user = User(**user_recipient_data)
-    user.save()
-    return user
-
-
-@pytest.fixture
-def message_data_1(user_sender, user_recipient):
-    return {
-        "content": "Hello, how are you?",
-        "sender_id": user_sender.id,
-        "recipient_id": user_recipient.id,
-    }
-
-
-@pytest.fixture
-def message_data_2(user_sender, user_recipient):
-    return {
-        "content": "Hello?",
-        "sender_id": user_sender.id,
-        "recipient_id": user_recipient.id,
-    }
-
-
-@pytest.fixture
-def message_data_3(user_sender, user_recipient):
-    return {
-        "content": "Hi.",
-        "sender_id": user_sender.id,
-        "recipient_id": user_recipient.id,
-    }
-
-
-@pytest.fixture
-def message_data_4(user_sender, user_recipient):
-    return {
-        "content": "Bye",
-        "sender_id": user_sender.id,
-        "recipient_id": user_recipient.id,
-    }
-
-
-@pytest.fixture
-def message_1(message_data_1):
-    return Message.objects.create(
-        content=message_data_1["content"],
-        sender_id=message_data_1["sender_id"],
-        recipient_id=message_data_1["recipient_id"],
-    )
-
-
-@pytest.fixture
-def message_2(message_data_2):
-    return Message.objects.create(
-        content=message_data_2["content"],
-        sender_id=message_data_2["sender_id"],
-        recipient_id=message_data_2["recipient_id"],
-    )
-
-
-@pytest.fixture
-def message_3(message_data_3):
-    return Message.objects.create(
-        content=message_data_3["content"],
-        sender_id=message_data_3["recipient_id"],
-        recipient_id=message_data_3["sender_id"],
-    )
-
-
-@pytest.fixture
-def message_4(message_data_4):
-    return Message.objects.create(
-        content=message_data_4["content"],
-        sender_id=message_data_4["recipient_id"],
-        recipient_id=message_data_4["sender_id"],
-    )
-
-
-def test_sender_user_non_existent(user_recipient, client):
-    response = client.get(f"/messages/{NON_EXISTENT_USER_ID}/{user_recipient.id}/")
+def test_sender_user_non_existent(user_recipient, fake_id, client):
+    response = client.get(f"/messages/{fake_id}/{user_recipient.id}/")
     content = parse_content(response)
 
-    assert content == {"error": f"Sender user does not exist. ID: {NON_EXISTENT_USER_ID}"}
+    assert content == {"error": f"Sender user does not exist. ID: {fake_id}"}
 
 
-def test_recipient_user_non_existent(user_sender, client):
-    response = client.get(f"/messages/{user_sender.id}/{NON_EXISTENT_USER_ID}/")
+def test_recipient_user_non_existent(user_sender, fake_id, client):
+    response = client.get(f"/messages/{user_sender.id}/{fake_id}/")
     content = parse_content(response)
 
-    assert content == {
-        "error": f"Recipient user does not exist. ID: {NON_EXISTENT_USER_ID}"
-    }
+    assert content == {"error": f"Recipient user does not exist. ID: {fake_id}"}
 
 
 def test_no_messages(user_sender, user_recipient, client):

@@ -1,51 +1,11 @@
-import pytest
-from chat.models import User
 from chat.utils.http_utils import parse_content
 
-NON_EXISTENT_USER_ID = 12345678
 
-
-@pytest.fixture
-def user_data_1():
-    return {"fullname": "User Usersson", "email": "userusersson@mail.com"}
-
-
-@pytest.fixture
-def user_data_2():
-    return {"fullname": "User Usersson2", "email": "userusersson2@mail.com"}
-
-
-@pytest.fixture
-def user_data_3():
-    return {"fullname": "User Usersson3", "email": "userusersson3@mail.com"}
-
-
-@pytest.fixture
-def user_1(user_data_1):
-    user = User(**user_data_1)
-    user.save()
-    return user
-
-
-@pytest.fixture
-def user_2(user_data_2):
-    user = User(**user_data_2)
-    user.save()
-    return user
-
-
-@pytest.fixture
-def user_3(user_data_3):
-    user = User(**user_data_3)
-    user.save()
-    return user
-
-
-def test_non_existent(client):
-    response = client.get(f"/users/{NON_EXISTENT_USER_ID}/")
+def test_non_existent(fake_id, client):
+    response = client.get(f"/users/{fake_id}/")
     content = parse_content(response)
 
-    assert content == {"error": f"User does not exist. ID: {NON_EXISTENT_USER_ID}"}
+    assert content == {"error": f"User does not exist. ID: {fake_id}"}
 
 
 def test_one_user(user_1, client):
