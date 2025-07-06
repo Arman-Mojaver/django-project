@@ -109,3 +109,11 @@ setup:
 	make migrate
 	make seed-dev
 	make web
+
+
+nuke:
+	make down
+	rm -rf .env
+	rm -rf compose/db_development/db_development_data/
+	rm -rf compose/db_production/db_production_data/
+	rm -rf compose/db_testing/db_testing_data/
