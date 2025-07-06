@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 
 .PHONY: help up down build freeze bash migrations migrate pytest superuser-dev \
-        superuser-prod seed-dev seed-prod flush-dev admin pgadmin
+        superuser-prod seed-dev seed-prod flush-dev admin pgadmin web setup
 
 .DEFAULT_GOAL := help
 
@@ -31,7 +31,7 @@ freeze:  ## Run pip freeze (requirements.txt)
 	pip freeze > requirements.txt
 
 
-bash:
+bash:  ## Open a bash shell in web service
 	docker compose -f docker-compose.yml run --rm -it web bash -c "cd jbl_chat && exec bash"
 
 
@@ -56,25 +56,25 @@ pytest:  ## Run pytest
 	"python -m pytest"
 
 
-superuser-dev:
+superuser-dev:  ## Create a superuser in development environment
 	export ENVIRONMENT=development && \
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"cd jbl_chat && python manage.py createsuperuser"
 
 
-superuser-prod:
+superuser-prod:  ## Create a superuser in production environment
 	export ENVIRONMENT=development && \
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"cd jbl_chat && python manage.py createsuperuser"
 
 
-seed-dev:
+seed-dev:  ## fill db-development with seed data
 	export ENVIRONMENT=development && \
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"cd jbl_chat && python manage.py seed"
 
 
-seed-prod:
+seed-prod:  ## fill db-production with seed data
 	export ENVIRONMENT=production && \
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
 	"cd jbl_chat && python manage.py seed"
@@ -96,3 +96,16 @@ pgadmin:  ## Open pgadmin
 
 web:  ## Open web
 	open http://localhost:8000
+
+setup:
+	@if [ ! -f .env ]; then cp .env.example .env && echo ".env created"; else echo ".env already exists"; fi
+	docker compose -f docker-compose.yml up -d db-development db-testing db-production pgadmin
+	@echo "Waiting for PostgreSQL to be ready..."
+	@until docker compose -f docker-compose.yml exec -T db-development sh -c 'pg_isready -U postgres -d db-development | grep "accepting connections" > /dev/null'; do \
+		echo "Still waiting..."; \
+		sleep 1; \
+	done
+	docker compose -f docker-compose.yml up -d web
+	make migrate
+	make seed-dev
+	make web
