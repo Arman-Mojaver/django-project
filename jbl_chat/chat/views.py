@@ -6,12 +6,12 @@ from chat.models import Message, User
 from chat.serializers import MessageSerializer, UserSerializer
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_POST
 
 
 def index(_request: HttpRequest) -> JsonResponse:
-    return JsonResponse({"message": "Server Working!"})
+    return redirect("/login/")
 
 
 @require_GET

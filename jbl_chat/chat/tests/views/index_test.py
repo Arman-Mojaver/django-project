@@ -1,7 +1,3 @@
-from chat.utils.http_utils import parse_content
-
-
-def test_index(client):
+def test_success(client):
     response = client.get("/")
-    content = parse_content(response)
-    assert content == {"message": "Server Working!"}
+    assert response.status_code == 302
