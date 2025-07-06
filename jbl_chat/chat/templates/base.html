@@ -3,68 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <title>{% block title %}Chat App{% endblock %}</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      plugins: [tailwindcss.daisyui],
+    };
+  </script>
   <script src="https://unpkg.com/htmx.org@1.9.2"></script>
-  {% block head_extra %}{% endblock %}
 </head>
-<body>
-  <div class="top-bar">
-    <span class="user-info">{{ user_fullname }} (ID: {{ user_id }})</span>
-    <a href="/login/" class="signout-link">Sign Out</a>
+
+<body class="bg-base-100 text-base-content font-sans p-8">
+
+  <div class="flex justify-end items-center gap-4 mb-6">
+    <span class="text-sm text-gray-700">{{ user_fullname }} (ID: {{ user_id }})</span>
+    <a href="/login/" class="btn btn-sm btn-outline btn-primary">Sign Out</a>
   </div>
 
-  {% block content %}{% endblock %}
+  <div class="container mx-auto">
+    {% block content %}{% endblock %}
+  </div>
+
   {% block scripts %}{% endblock %}
+
+  <div id="error" class="text-error mt-4"></div>
+
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+  a {
+    color: #3b82f6; /* Tailwind's blue-500 */
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  a:hover,
+  a:focus {
+    color: #1e40af; /* Tailwind's blue-800 for hover */
+    outline: none;
+    text-decoration: underline;
+  }
+  a:focus-visible {
+    outline: 2px solid #2563eb; /* Tailwind's blue-600 */
+    outline-offset: 2px;
+  }
+  </style>
+
 </body>
-<style>
-  body {
-    font-family: sans-serif;
-    margin: 2rem;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-
-  th, td {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f4f4f4;
-  }
-
-  #error {
-    color: red;
-    margin-top: 1rem;
-  }
-
-  .top-bar {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px; /* space between username and sign out link */
-  font-family: sans-serif;
-}
-
-.user-info {
-  font-size: 0.95rem;
-  color: #333;
-}
-
-.signout-link {
-  font-size: 0.95rem;
-  color: #007bff;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-
-
-
-</style>
+</html>

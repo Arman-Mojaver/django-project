@@ -3,5 +3,5 @@
   <td>{{ message.content|escape }}</td>
   <td>{% if message.sender_id == request.user.id %}{{ user_fullname }}{% else %}{{ other_user_fullname }}{% endif %}</td>
   <td>{% if message.recipient_id == request.user.id %}{{ user_fullname }}{% else %}{{ other_user_fullname }}{% endif %}</td>
-  <td>{{ message.created_at|date:"Y-m-d H:i" }}</td>
+  <td>{{ message.created_at|date:"Y-m-d H:i:s" }}</td>
 </tr>

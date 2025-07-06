@@ -3,21 +3,31 @@
 {% block title %}Users{% endblock %}
 
 {% block content %}
-<h2>Other Users</h2>
-<table
-  id="users-table"
-  hx-get="/api/users/{{ user_id }}/"
-  hx-trigger="load"
-  hx-swap="none"
-  hx-on="htmx:afterOnLoad: renderTable(event.detail.xhr.response)"
->
-  <thead>
-    <tr><th>ID</th><th>Full Name</th><th>Email</th></tr>
-  </thead>
-  <tbody>
-    <tr><td colspan="3">Loading…</td></tr>
-  </tbody>
-</table>
+<h2 class="text-3xl font-semibold text-center mb-6" style="font-family: Garamond, serif;">Users</h2>
+
+<div class="overflow-x-auto bg-white shadow-md rounded-lg">
+  <table
+    id="users-table"
+    class="table table-zebra w-full"
+    hx-get="/api/users/{{ user_id }}/"
+    hx-trigger="load"
+    hx-swap="none"
+    hx-on="htmx:afterOnLoad: renderTable(event.detail.xhr.response)"
+  >
+    <thead class="bg-base-200">
+      <tr>
+        <th class="text-left">ID</th>
+        <th class="text-left">Full Name</th>
+        <th class="text-left">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="3" class="text-center text-gray-500">Loading…</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -29,17 +39,12 @@
     const tbody = document.querySelector('#users-table tbody');
     tbody.innerHTML = '';
 
-    if (!data || data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3"><em>No users found.</em></td></tr>';
-      return;
-    }
-
     data.forEach(u => {
       const tr = document.createElement('tr');
       const href = `/messages/${currentUserId}/${u.id}/`;
       tr.innerHTML = `
         <td>${u.id}</td>
-        <td><a href="${href}">${u.fullname}</a></td>
+        <td><a href="${href}" class="link link-primary">${u.fullname}</a></td>
         <td>${u.email}</td>
       `;
       tbody.appendChild(tr);

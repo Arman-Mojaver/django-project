@@ -3,30 +3,52 @@
 {% block title %}Messages{% endblock %}
 
 {% block content %}
-<a href="/users/{{ user_id }}/" class="btn">Users</a>
-<h2>Messages</h2>
-<table id="messages-table">
-  <thead>
-    <tr>
-      <th>ID</th><th>Content</th><th>Sender</th><th>Recipient</th><th>Created At</th>
-    </tr>
-  </thead>
-  <tbody id="messages-body"
-         hx-get="{% url 'message_list_partial' user_id other_user_id %}"
-         hx-trigger="load, every 5s"
-         hx-swap="innerHTML">
-    <tr><td colspan="5">Loading...</td></tr>
-  </tbody>
-</table>
+<div class="mb-4">
+  <a href="/users/{{ user_id }}/" class="btn btn-outline btn-primary">← Users</a>
+</div>
+
+<h2 class="text-3xl font-semibold text-center mb-6" style="font-family: Garamond, serif;">
+  Messages
+</h2>
+
+<div class="overflow-x-auto bg-white shadow-md rounded-lg mb-6">
+  <table id="messages-table" class="table table-zebra w-full">
+    <thead class="bg-base-200">
+      <tr>
+        <th class="text-left">ID</th>
+        <th class="text-left">Content</th>
+        <th class="text-left">Sender</th>
+        <th class="text-left">Recipient</th>
+        <th class="text-left">Created At</th>
+      </tr>
+    </thead>
+    <tbody id="messages-body"
+           hx-get="{% url 'message_list_partial' user_id other_user_id %}"
+           hx-trigger="load, every 5s"
+           hx-swap="innerHTML">
+      <tr><td colspan="5" class="text-center text-gray-500">Loading...</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <form id="message-form"
+      class="flex items-center gap-4 bg-base-100 p-4 rounded-lg shadow"
       hx-post="{% url 'message_create_partial' user_id other_user_id %}"
       hx-include="this"
       hx-target="#messages-body"
       hx-swap="beforeend"
       hx-on="htmx:afterRequest: this.reset()">
   {% csrf_token %}
-  <input name="content" type="text" placeholder="Type your message..." required />
-  <button type="submit">Send</button>
+
+  <input name="content"
+       type="text"
+       placeholder="Type your message..."
+       class="input input-bordered w-full bg-white text-black border-gray-300 focus:outline-none focus:ring-0"
+       required />
+
+  <button type="submit"
+          class="btn btn-outline border-blue-500 text-blue-600 bg-white hover:bg-blue-50 ml-auto">
+    Send
+  </button>
 </form>
 {% endblock %}
