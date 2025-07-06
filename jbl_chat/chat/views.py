@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import json
 
 from chat.models import Message, User
 from chat.serializers import MessageSerializer, UserSerializer
 from django.db.models import Q
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.views.decorators.http import require_GET, require_POST
 
 
@@ -24,7 +27,11 @@ def get_users(_request: HttpRequest, user_id: int) -> JsonResponse:
 
 
 @require_GET
-def get_messages(_request: HttpRequest, sender_id: int, recipient_id: int):  # noqa: ANN201
+def get_messages(
+    _request: HttpRequest,
+    sender_id: int,
+    recipient_id: int,
+) -> JsonResponse:
     sender_user = User.objects.filter(id=sender_id).first()
     if not sender_user:
         return JsonResponse(
@@ -49,7 +56,11 @@ def get_messages(_request: HttpRequest, sender_id: int, recipient_id: int):  # n
 
 
 @require_POST
-def create_message(request: HttpRequest, sender_id: int, recipient_id: int):  # noqa: ANN201
+def create_message(
+    request: HttpRequest,
+    sender_id: int,
+    recipient_id: int,
+) -> JsonResponse:
     sender_user = User.objects.filter(id=sender_id).first()
     if not sender_user:
         return JsonResponse(
@@ -78,3 +89,12 @@ def create_message(request: HttpRequest, sender_id: int, recipient_id: int):  # 
     serialized_message = MessageSerializer(message).data
 
     return JsonResponse({"data": serialized_message})
+
+
+def users(request: HttpRequest, user_id: int) -> HttpResponse | JsonResponse:
+    user = User.objects.filter(id=user_id).first()
+    if not user:
+        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+
+    context = {"user_id": user.id, "user_fullname": user.fullname}
+    return render(request, "users.html", context)
