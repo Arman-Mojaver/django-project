@@ -3,28 +3,28 @@ from rest_framework.fields import DateTimeField
 
 
 def test_sender_user_non_existent(user_recipient, fake_id, client):
-    response = client.get(f"/messages/{fake_id}/{user_recipient.id}/")
+    response = client.get(f"/api/messages/{fake_id}/{user_recipient.id}/")
     content = parse_content(response)
 
     assert content == {"error": f"Sender user does not exist. ID: {fake_id}"}
 
 
 def test_recipient_user_non_existent(user_sender, fake_id, client):
-    response = client.get(f"/messages/{user_sender.id}/{fake_id}/")
+    response = client.get(f"/api/messages/{user_sender.id}/{fake_id}/")
     content = parse_content(response)
 
     assert content == {"error": f"Recipient user does not exist. ID: {fake_id}"}
 
 
 def test_no_messages(user_sender, user_recipient, client):
-    response = client.get(f"/messages/{user_sender.id}/{user_recipient.id}/")
+    response = client.get(f"/api/messages/{user_sender.id}/{user_recipient.id}/")
     content = parse_content(response)
 
     assert content == {"data": []}
 
 
 def test_only_sender_messages(user_sender, user_recipient, message_1, message_2, client):
-    response = client.get(f"/messages/{user_sender.id}/{user_recipient.id}/")
+    response = client.get(f"/api/messages/{user_sender.id}/{user_recipient.id}/")
     content = parse_content(response)
 
     expected_messages = [
@@ -54,7 +54,7 @@ def test_only_recipient_messages(
     message_4,
     client,
 ):
-    response = client.get(f"/messages/{user_sender.id}/{user_recipient.id}/")
+    response = client.get(f"/api/messages/{user_sender.id}/{user_recipient.id}/")
     content = parse_content(response)
 
     expected_messages = [
@@ -86,7 +86,7 @@ def test_sender_and_recipient_messages(  # noqa: PLR0913
     message_4,
     client,
 ):
-    response = client.get(f"/messages/{user_sender.id}/{user_recipient.id}/")
+    response = client.get(f"/api/messages/{user_sender.id}/{user_recipient.id}/")
     content = parse_content(response)
 
     expected_messages = [
@@ -128,10 +128,10 @@ def test_swap_sender_and_recipient_returns_same_result(
     user_recipient,
     client,
 ):
-    response_1 = client.get(f"/messages/{user_sender.id}/{user_recipient.id}/")
+    response_1 = client.get(f"/api/messages/{user_sender.id}/{user_recipient.id}/")
     content_1 = parse_content(response_1)
 
-    response_2 = client.get(f"/messages/{user_recipient.id}/{user_sender.id}/")
+    response_2 = client.get(f"/api/messages/{user_recipient.id}/{user_sender.id}/")
     content_2 = parse_content(response_2)
 
     assert content_1 == content_2

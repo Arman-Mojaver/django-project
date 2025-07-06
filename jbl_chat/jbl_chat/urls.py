@@ -25,7 +25,7 @@ from django.urls import path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", index),
-    path("users/<int:user_id>/", get_users),
-    path("messages/<int:sender_id>/<int:recipient_id>/", get_messages),
-    path("message/<int:sender_id>/<int:recipient_id>/", create_message),
+    path("api/users/<int:user_id>/", get_users),
+    path("api/messages/<int:sender_id>/<int:recipient_id>/", get_messages),
+    path("api/message/<int:sender_id>/<int:recipient_id>/", create_message),
 ]

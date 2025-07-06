@@ -8,7 +8,7 @@ from rest_framework.fields import DateTimeField
 def test_sender_user_non_existent(user_recipient, fake_id, client):
     data = {"content": "some content"}
     response = client.post(
-        f"/message/{fake_id}/{user_recipient.id}/",
+        f"/api/message/{fake_id}/{user_recipient.id}/",
         data=data,
     )
     content = parse_content(response)
@@ -19,7 +19,7 @@ def test_sender_user_non_existent(user_recipient, fake_id, client):
 def test_recipient_user_non_existent(user_sender, fake_id, client):
     data = {"content": "some content"}
     response = client.post(
-        f"/message/{user_sender.id}/{fake_id}/",
+        f"/api/message/{user_sender.id}/{fake_id}/",
         data=data,
     )
     content = parse_content(response)
@@ -30,7 +30,7 @@ def test_recipient_user_non_existent(user_sender, fake_id, client):
 def test_invalid_content(user_sender, user_recipient, client):
     data = {}
     response = client.post(
-        f"/message/{user_sender.id}/{user_recipient.id}/",
+        f"/api/message/{user_sender.id}/{user_recipient.id}/",
         data=json.dumps(data),
         content_type="application/json",
     )
@@ -42,7 +42,7 @@ def test_invalid_content(user_sender, user_recipient, client):
 def test_create_message(user_sender, user_recipient, message_data_1, client):
     data = {"content": message_data_1["content"]}
     response = client.post(
-        f"/message/{user_sender.id}/{user_recipient.id}/",
+        f"/api/message/{user_sender.id}/{user_recipient.id}/",
         data=json.dumps(data),
         content_type="application/json",
     )
