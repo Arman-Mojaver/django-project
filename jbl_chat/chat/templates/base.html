@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% load static %}
+
   <meta charset="UTF-8" />
   <title>{% block title %}Chat App{% endblock %}</title>
 
@@ -15,10 +17,16 @@
 
 <body class="bg-base-100 text-base-content font-sans p-8">
 
-  <div class="flex justify-end items-center gap-4 mb-6">
+<div class="flex justify-between items-center gap-4 mb-6">
+  <div class="flex items-center gap-2">
+    <img src="{% static '/chat_logo.png' %}" alt="Chat Logo" class="h-10 w-auto" />
+  </div>
+
+  <div class="flex items-center gap-4">
     <span class="text-sm text-gray-700">{{ user_fullname }} (ID: {{ user_id }})</span>
     <a href="/login/" class="btn btn-sm btn-outline btn-primary">Sign Out</a>
   </div>
+</div>
 
   <div class="container mx-auto">
     {% block content %}{% endblock %}
