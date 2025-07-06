@@ -129,3 +129,58 @@ def messages(
         "other_user_fullname": other_user.fullname,
     }
     return render(request, "messages.html", context)
+
+
+def message_list_partial(
+    request: HttpRequest,
+    user_id: int,
+    other_user_id: int,
+) -> HttpResponse | JsonResponse:
+    user = User.objects.filter(id=user_id).first()
+    if not user:
+        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+
+    other_user = User.objects.filter(id=other_user_id).first()
+    if not other_user:
+        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+
+    messages = Message.objects.filter(
+        sender__in=[user, other_user], recipient__in=[user, other_user]
+    ).order_by("created_at")
+
+    context = {
+        "messages": messages,
+        "user_fullname": user.fullname,
+        "other_user_fullname": other_user.fullname,
+    }
+
+    return render(request, "partials/message_list.html", context)
+
+
+@require_POST
+def message_create_partial(
+    request: HttpRequest,
+    user_id: int,
+    other_user_id: int,
+) -> HttpResponse | JsonResponse:
+    content = request.POST.get("content")
+    if content is None:
+        return JsonResponse({"error": f"Invalid content: {content}"}, status=400)
+
+    user = User.objects.filter(id=user_id).first()
+    if not user:
+        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+
+    other_user = User.objects.filter(id=other_user_id).first()
+    if not other_user:
+        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+
+    message = Message.objects.create(sender=user, recipient=other_user, content=content)
+
+    context = {
+        "message": message,
+        "user_fullname": user.fullname,
+        "other_user_fullname": other_user.fullname,
+    }
+
+    return render(request, "partials/message_row.html", context)

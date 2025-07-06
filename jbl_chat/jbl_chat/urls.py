@@ -24,6 +24,8 @@ from chat.views import (
     get_users,
     index,
     login,
+    message_create_partial,
+    message_list_partial,
     messages,
     users,
 )
@@ -39,4 +41,14 @@ urlpatterns = [
     path("login/", login),
     path("users/<int:user_id>/", users),
     path("messages/<int:user_id>/<int:other_user_id>/", messages),
+    path(
+        "messages/partials/<int:user_id>/<int:other_user_id>/",
+        message_list_partial,
+        name="message_list_partial",
+    ),
+    path(
+        "message/partials/<int:user_id>/<int:other_user_id>/",
+        message_create_partial,
+        name="message_create_partial",
+    ),
 ]

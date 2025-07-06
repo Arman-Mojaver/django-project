@@ -2,92 +2,31 @@
 
 {% block title %}Messages{% endblock %}
 
-{% block head_extra %}
-<script>
-  const userId = {{ user_id }};
-  const otherUserId = {{ other_user_id }};
-  const userFullname = "{{ user_fullname }}";
-  const otherUserFullname = "{{ other_user_fullname }}";
-</script>
-{% endblock %}
-
 {% block content %}
-<a href="/users/{{ user_id }}/" style="display: inline-block; margin-bottom: 1rem;">Users</a>
-
+<a href="/users/{{ user_id }}/" class="btn">Users</a>
 <h2>Messages</h2>
-<div id="error"></div>
 <table id="messages-table">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Content</th>
-      <th>Sender</th>
-      <th>Recipient</th>
-      <th>Created At</th>
+      <th>ID</th><th>Content</th><th>Sender</th><th>Recipient</th><th>Created At</th>
     </tr>
   </thead>
-  <tbody></tbody>
+  <tbody id="messages-body"
+         hx-get="{% url 'message_list_partial' user_id other_user_id %}"
+         hx-trigger="load"
+         hx-swap="innerHTML">
+    <tr><td colspan="5">Loading...</td></tr>
+  </tbody>
 </table>
 
-<form id="message-form" style="margin-top: 1rem;">
+<form id="message-form"
+      hx-post="{% url 'message_create_partial' user_id other_user_id %}"
+      hx-include="this"
+      hx-target="#messages-body"
+      hx-swap="beforeend"
+      hx-on="htmx:afterRequest: this.reset()">
   {% csrf_token %}
-  <input type="text" name="content" placeholder="Type your message here..." required style="width: 80%; padding: 0.5rem;" />
-  <button type="submit" style="padding: 0.5rem 1rem;">Send</button>
+  <input name="content" type="text" placeholder="Type your message..." required />
+  <button type="submit">Send</button>
 </form>
-{% endblock %}
-
-{% block scripts %}
-<script>
-  (function() {
-    const getEndpoint = `/api/messages/${userId}/${otherUserId}/`;
-    const postEndpoint = `/api/message/${userId}/${otherUserId}/`;
-    const tableBody = document.querySelector('#messages-table tbody');
-    const errorDiv = document.getElementById('error');
-
-    fetch(getEndpoint)
-      .then(res => res.ok ? res.json() : res.json().then(err => Promise.reject(err)))
-      .then(json => {
-        const msgs = json.data || [];
-        if (!msgs.length) {
-          tableBody.innerHTML = '<tr><td colspan="5">No messages found.</td></tr>';
-          return;
-        }
-        tableBody.innerHTML = msgs.map(msg => `
-          <tr>
-            <td>${msg.id}</td>
-            <td>${msg.content}</td>
-            <td>${msg.sender_id === userId ? userFullname : otherUserFullname}</td>
-            <td>${msg.recipient_id === userId ? userFullname : otherUserFullname}</td>
-            <td>${new Date(msg.created_at).toLocaleString()}</td>
-          </tr>
-        `).join('');
-      })
-      .catch(err => {
-        errorDiv.textContent = err.error || err.message || 'Failed to fetch messages';
-      });
-
-    const form = document.getElementById('message-form');
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const content = form.elements['content'].value;
-      const csrfToken = form.elements['csrfmiddlewaretoken'].value;
-
-      fetch(postEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken
-        },
-        body: JSON.stringify({ content })
-      })
-      .then(res => {
-        if (!res.ok) return res.json().then(err => Promise.reject(err));
-        window.location.reload();
-      })
-      .catch(err => {
-        errorDiv.textContent = err.error || err.message || 'Failed to send message';
-      });
-    });
-  })();
-</script>
 {% endblock %}

@@ -1,0 +1,5 @@
+{% if messages %}
+  {% for message in messages %}
+    {% include "partials/message_row.html" with message=message %}
+  {% endfor %}
+{% endif %}
