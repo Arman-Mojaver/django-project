@@ -26,35 +26,33 @@
       <th>Created At</th>
     </tr>
   </thead>
-  <tbody>
-  </tbody>
+  <tbody></tbody>
 </table>
+
+<form id="message-form" style="margin-top: 1rem;">
+  {% csrf_token %}
+  <input type="text" name="content" placeholder="Type your message here..." required style="width: 80%; padding: 0.5rem;" />
+  <button type="submit" style="padding: 0.5rem 1rem;">Send</button>
+</form>
 {% endblock %}
 
 {% block scripts %}
 <script>
   (function() {
-    const endpoint = `/api/messages/${userId}/${otherUserId}/`;
-
+    const getEndpoint = `/api/messages/${userId}/${otherUserId}/`;
+    const postEndpoint = `/api/message/${userId}/${otherUserId}/`;
     const tableBody = document.querySelector('#messages-table tbody');
     const errorDiv = document.getElementById('error');
 
-    fetch(endpoint)
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(err => {
-            throw new Error(err.error || 'Failed to fetch messages');
-          });
-        }
-        return response.json();
-      })
+    fetch(getEndpoint)
+      .then(res => res.ok ? res.json() : res.json().then(err => Promise.reject(err)))
       .then(json => {
-        const messages = json.data || [];
-        if (messages.length === 0) {
+        const msgs = json.data || [];
+        if (!msgs.length) {
           tableBody.innerHTML = '<tr><td colspan="5">No messages found.</td></tr>';
           return;
         }
-        tableBody.innerHTML = messages.map(msg => `
+        tableBody.innerHTML = msgs.map(msg => `
           <tr>
             <td>${msg.id}</td>
             <td>${msg.content}</td>
@@ -65,9 +63,31 @@
         `).join('');
       })
       .catch(err => {
-        errorDiv.textContent = err.message;
-        tableBody.innerHTML = '';
+        errorDiv.textContent = err.error || err.message || 'Failed to fetch messages';
       });
+
+    const form = document.getElementById('message-form');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const content = form.elements['content'].value;
+      const csrfToken = form.elements['csrfmiddlewaretoken'].value;
+
+      fetch(postEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ content })
+      })
+      .then(res => {
+        if (!res.ok) return res.json().then(err => Promise.reject(err));
+        window.location.reload();
+      })
+      .catch(err => {
+        errorDiv.textContent = err.error || err.message || 'Failed to send message';
+      });
+    });
   })();
 </script>
 {% endblock %}
