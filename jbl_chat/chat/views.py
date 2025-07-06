@@ -91,6 +91,10 @@ def create_message(
     return JsonResponse({"data": serialized_message})
 
 
+def login(request: HttpRequest) -> HttpResponse:
+    return render(request, "login.html")
+
+
 def users(request: HttpRequest, user_id: int) -> HttpResponse | JsonResponse:
     user = User.objects.filter(id=user_id).first()
     if not user:

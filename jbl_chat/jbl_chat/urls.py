@@ -18,7 +18,7 @@ Including another URLconf
 
 """
 
-from chat.views import create_message, get_messages, get_users, index, users
+from chat.views import create_message, get_messages, get_users, index, login, users
 from django.contrib import admin
 from django.urls import path
 
@@ -28,5 +28,6 @@ urlpatterns = [
     path("api/users/<int:user_id>/", get_users),
     path("api/messages/<int:sender_id>/<int:recipient_id>/", get_messages),
     path("api/message/<int:sender_id>/<int:recipient_id>/", create_message),
+    path("login/", login),
     path("users/<int:user_id>/", users),
 ]

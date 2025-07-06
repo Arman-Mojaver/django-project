@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+    <form hx-on:submit="handleLogin(event)">
+        <input type="text" name="user_id" id="user_id" placeholder="Introduce user id" required>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
+
+<script>
+    function handleLogin(event) {
+        event.preventDefault();
+        const id = document.getElementById('user_id').value;
+        window.location.href = '/users/' + encodeURIComponent(id) + '/';
+    }
+</script>
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: sans-serif;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+    input, button {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+</style>
