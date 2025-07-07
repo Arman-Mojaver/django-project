@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <title>Error</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .background {
+            background-image: url("{% static 'error.png' %}");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .error-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 40px;
+            border-radius: 12px;
+            margin-left: 250px;
+            margin-top: 100px;
+            max-width: 400px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 16px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background">
+        <div class="error-container">
+            <div class="error-label">An error has occurred:</div>
+            <div class="error-message">{{ error }}</div>
+        </div>
+    </div>
+
+</body>
+</html>
