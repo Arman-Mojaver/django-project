@@ -7,6 +7,11 @@ The app uses the following tools and frameworks:
 - Docker + docker-compose
 - Postgres + pgAdmin
 
+## Setup tutorial video:
+The following short video illustrates the steps to download and set up and use the project:
+
+[Setup tutorial.mp4](Documentation%2FSetup%20tutorial.mp4)
+
 ## Setup
 In order to setup the app:
 1. Clone the repo
