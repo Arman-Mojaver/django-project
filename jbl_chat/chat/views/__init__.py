@@ -1,5 +1,3 @@
-from .api.create_message_view import create_message
-from .api.get_messages_view import get_messages
 from .api.get_users_view import get_users
 from .frontend.pages.index_view import index
 from .frontend.pages.login_view import login

@@ -31,7 +31,8 @@ def message_create_partial(
     other_user = User.objects.filter(id=other_user_id).first()
     if not other_user:
         return JsonResponse(
-            {"error": f"User does not exist. ID: {user_id}"}, status=HTTPStatus.NOT_FOUND
+            {"error": f"User does not exist. ID: {other_user_id}"},
+            status=HTTPStatus.NOT_FOUND,
         )
 
     message = Message.objects.create(sender=user, recipient=other_user, content=content)

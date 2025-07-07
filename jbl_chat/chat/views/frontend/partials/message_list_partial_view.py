@@ -22,12 +22,13 @@ def message_list_partial(
     other_user = User.objects.filter(id=other_user_id).first()
     if not other_user:
         return JsonResponse(
-            {"error": f"User does not exist. ID: {user_id}"},
+            {"error": f"User does not exist. ID: {other_user_id}"},
             status=HTTPStatus.NOT_FOUND,
         )
 
     messages = Message.objects.filter(
-        sender__in=[user, other_user], recipient__in=[user, other_user]
+        sender__in=[user, other_user],
+        recipient__in=[user, other_user],
     ).order_by("created_at")
 
     context = {
