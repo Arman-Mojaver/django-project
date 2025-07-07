@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from http import HTTPStatus
+
 from chat.models import Message, User
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -14,15 +16,23 @@ def message_create_partial(
 ) -> HttpResponse | JsonResponse:
     content = request.POST.get("content")
     if content is None:
-        return JsonResponse({"error": f"Invalid content: {content}"}, status=400)
+        return JsonResponse(
+            {"error": f"Invalid content: {content}"},
+            status=HTTPStatus.BAD_REQUEST,
+        )
 
     user = User.objects.filter(id=user_id).first()
     if not user:
-        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+        return JsonResponse(
+            {"error": f"User does not exist. ID: {user_id}"},
+            status=HTTPStatus.NOT_FOUND,
+        )
 
     other_user = User.objects.filter(id=other_user_id).first()
     if not other_user:
-        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+        return JsonResponse(
+            {"error": f"User does not exist. ID: {user_id}"}, status=HTTPStatus.NOT_FOUND
+        )
 
     message = Message.objects.create(sender=user, recipient=other_user, content=content)
 

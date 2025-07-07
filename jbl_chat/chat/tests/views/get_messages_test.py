@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from chat.utils.http_utils import parse_content
 from rest_framework.fields import DateTimeField
 
@@ -7,7 +9,7 @@ def test_sender_user_non_existent(user_recipient, fake_id, client):
     content = parse_content(response)
 
     assert content == {"error": f"Sender user does not exist. ID: {fake_id}"}
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_recipient_user_non_existent(user_sender, fake_id, client):
@@ -15,7 +17,7 @@ def test_recipient_user_non_existent(user_sender, fake_id, client):
     content = parse_content(response)
 
     assert content == {"error": f"Recipient user does not exist. ID: {fake_id}"}
-    assert response.status_code == 404
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_no_messages(user_sender, user_recipient, client):
@@ -23,7 +25,7 @@ def test_no_messages(user_sender, user_recipient, client):
     content = parse_content(response)
 
     assert content == {"data": []}
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
 
 def test_only_sender_messages(user_sender, user_recipient, message_1, message_2, client):
@@ -48,7 +50,7 @@ def test_only_sender_messages(user_sender, user_recipient, message_1, message_2,
     ]
 
     assert content == {"data": expected_messages}
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
 
 def test_only_recipient_messages(
@@ -79,7 +81,7 @@ def test_only_recipient_messages(
     ]
 
     assert content == {"data": expected_messages}
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
 
 def test_sender_and_recipient_messages(  # noqa: PLR0913
@@ -126,7 +128,7 @@ def test_sender_and_recipient_messages(  # noqa: PLR0913
     ]
 
     assert content == {"data": expected_messages}
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
 
 
 def test_swap_sender_and_recipient_returns_same_result(
@@ -141,5 +143,5 @@ def test_swap_sender_and_recipient_returns_same_result(
     content_2 = parse_content(response_2)
 
     assert content_1 == content_2
-    assert response_1.status_code == 200
-    assert response_2.status_code == 200
+    assert response_1.status_code == HTTPStatus.OK
+    assert response_2.status_code == HTTPStatus.OK

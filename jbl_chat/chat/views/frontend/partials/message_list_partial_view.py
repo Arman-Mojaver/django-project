@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from http import HTTPStatus
+
 from chat.models import Message, User
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -12,11 +14,17 @@ def message_list_partial(
 ) -> HttpResponse | JsonResponse:
     user = User.objects.filter(id=user_id).first()
     if not user:
-        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+        return JsonResponse(
+            {"error": f"User does not exist. ID: {user_id}"},
+            status=HTTPStatus.NOT_FOUND,
+        )
 
     other_user = User.objects.filter(id=other_user_id).first()
     if not other_user:
-        return JsonResponse({"error": f"User does not exist. ID: {user_id}"}, status=404)
+        return JsonResponse(
+            {"error": f"User does not exist. ID: {user_id}"},
+            status=HTTPStatus.NOT_FOUND,
+        )
 
     messages = Message.objects.filter(
         sender__in=[user, other_user], recipient__in=[user, other_user]

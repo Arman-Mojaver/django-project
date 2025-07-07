@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from http import HTTPStatus
+
 from chat.models import Message, User
 from chat.serializers import MessageSerializer
 from django.db.models import Q
@@ -17,14 +19,14 @@ def get_messages(
     if not sender_user:
         return JsonResponse(
             {"error": f"Sender user does not exist. ID: {sender_id}"},
-            status=404,
+            status=HTTPStatus.NOT_FOUND,
         )
 
     recipient_user = User.objects.filter(id=recipient_id).first()
     if not recipient_user:
         return JsonResponse(
             {"error": f"Recipient user does not exist. ID: {recipient_id}"},
-            status=404,
+            status=HTTPStatus.NOT_FOUND,
         )
 
     messages = Message.objects.filter(
