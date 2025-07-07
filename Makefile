@@ -55,6 +55,12 @@ pytest:  ## Run pytest
 	"python -m pytest"
 
 
+cov:  ## Run tests and make coverage report
+	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \
+	"pytest --cov --cov-report html:coverage/html" \
+	&& open coverage/html/index.html
+
+
 superuser-dev:  ## Create a superuser in development environment
 	export ENVIRONMENT=development && \
 	docker compose -f docker-compose.yml run --rm -it -v $(PWD):/app web /bin/bash -c \

@@ -64,6 +64,12 @@ make pytest
 
 The command can be safely run without changing the environment in .env. The state of production and development environments will be not affected by running the tests.
 
+## Test coverage report
+In order to run the tests and generate an HTML coverage report, run the following command:
+```
+make cov
+```
+
 
 ## Django admin
 In order to access the Django admin page, first a superuser needs to be created. Create a superuser by running the following command:

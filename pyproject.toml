@@ -74,3 +74,26 @@ quote-style = "double"
 
     "SLF001",   # Private member accessed
 ]
+
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "./.venv/*",
+    "*tests/*",
+    "*testing_utils/*",
+    "jbl_chat/chat/views/frontend/*",
+]
+data_file = "coverage/.coverage"
+
+[tool.coverage.report]
+omit = [
+    "./.venv/*",
+    "conftest.py",
+    "*testing_utils/*",
+    "*tests/*",
+]
+exclude_lines = [
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+]
