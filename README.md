@@ -1,17 +1,134 @@
-# jbl-chat
+# Chat App
 
-Let's set the stage, you are the founder of this exciting new messaging startup, you are tasked with building the first version of a product that is aimed to evolve with feedback from the team and users.
+The following project is a chat application that allows users view and chat with other users. Users login with their id, see other users that can chat with, and chat with them by sending messages and viewing the chat history.
 
-You're building the backend using Django, and your initial task is to expose a starting API while also leveraging HTMX for interactive front-end experiences. With this first release, we want to deliver the following user stories:
+The app uses the following tools and frameworks:
+- Django + HTMX
+- Docker + docker-compose
+- Postgres + pgAdmin
 
-1. As a user, I want to see all other users on the platform.
-2. As a user, I want to view my conversation with another user.
-3. As a user, I want to be able to send messages to another user on the platform.
+## Setup
+In order to setup the app:
+1. Clone the repo
 
-Given that this is your startup, you have the freedom to set up and utilize the practices that align with your goals. You can use any Python libraries or external tools that you prefer.
+```
+git clone https://github.com/Arman-Mojaver/django-project.git
+```
+2. Run the following make command
 
-We have provided a Django skeleton project along with Docker setup for your convenience. Feel free to utilize Docker for development or Python virtual environments for your local setup. Since managing user registration isn’t required for this assessment, you can create dummy users directly using the shell and implement session authentication for the API.
+```
+make setup
+```
 
-Incorporating HTMX will allow you to create dynamic, interactive elements on the front end without needing to reload the page. We encourage you to think about how HTMX can enhance user interactions effectively.
+The command will:
+- Create a .env file
+- Start db containers
+- Start web container
+- Run migrations
+- Create seed data in the db
+- Open the login page
 
-Please submit your solution as a pull request to our public repository. Happy coding!
+
+3. After running the command, open http://localhost:8000/login/ (Already open from `make start`), and introduce an ID. The `make start` command creates 10 users (1-5 have messages with other users, 6-10 do not have messages with other users)
+
+
+## Links
+web: http://localhost:8000/login/
+
+Django admin: http://localhost:8000/admin/
+
+pgAdmin: http://localhost:8082/
+
+
+## Environments
+The app has 3 environments: `production`, `development`, `testing`
+
+In order to change between environments:
+- change the ENVIRONMENT variable in .env
+- Recreate the containers:
+```
+make down && make up
+```
+
+
+## Tests
+Tests are run with the following command:
+```
+make pytest
+```
+
+The command can be safely run without changing the environment in .env. The state of production and development environments will be not affected by running the tests.
+
+
+## Django admin
+In order to access the Django admin page, first a superuser needs to be created. Create a superuser by running the following command:
+- development environment:
+```
+make superuser-dev
+```
+- production environment:
+```
+make superuser-prod
+```
+
+Once created, go to http://localhost:8000/admin/ and introduce the newly created superuser credentials.
+
+## Create/Delete users
+Currently, the app does not support creating/deleting users in the web UI.
+
+### Create a user
+1. Go to the Django admin page: http://localhost:8000/admin/
+![Django login.png](Documentation%2FDjango%20login.png)
+2. Introduce the superuser username and password (If no superuser exists go to the `Django admin` section of this README, and create a superuser)
+
+![Django admin.png](Documentation%2FDjango%20admin.png)
+3. Click on Users (under CHAT app)
+
+![Users.png](Documentation%2FUsers.png)
+4. click `ADD USER` (on the top right corner)
+
+![Add user.png](Documentation%2FAdd%20user.png)
+5. introduce fullname and email, click `SAVE`
+
+
+### Delete a user
+1. Go to the Django admin page: http://localhost:8000/admin/
+![Django login.png](Documentation%2FDjango%20login.png)
+2. Introduce the superuser username and password (If no superuser exists go to the `Django admin` section of this README, and create a superuser)
+
+![Django admin.png](Documentation%2FDjango%20admin.png)
+3. Click on Users (under CHAT app)
+
+![Users.png](Documentation%2FUsers.png)
+4. Select the user/users to be deleted.
+
+![Users selected.png](Documentation%2FUsers%20selected.png)
+5. Click con action. Click on `Delete selected users`
+
+![Action clicked.png](Documentation%2FAction%20clicked.png)
+6. Click on go.
+
+![Click go.png](Documentation%2FClick%20go.png)
+7. Click on `Yes, I'm sure`
+![Confirm delete.png](Documentation%2FConfirm%20delete.png)
+
+## pgAdmin
+pgAdmin is a Web UI to manage Postgres databases. In order to access it, go to http://localhost:8082/.
+When accessing it for the first time, there will be no servers nor databases available.
+### Add a server and database
+1. Go to http://localhost:8082/
+![pgadmin main.png](Documentation%2Fpgadmin%20main.png)
+2. Click on `Add New Server`
+
+![pgadmin general modal.png](Documentation%2Fpgadmin%20general%20modal.png)
+3. Add a server name (any name, but recommended that it matches the environment)
+
+![pgadmin connections modal.png](Documentation%2Fpgadmin%20connections%20modal.png)
+4. Add a given environment's parameters, click `SAVE`
+
+![pdamin added server.png](Documentation%2Fpdamin%20added%20server.png)
+
+The environment data is available in `django-project/config/`:
+```
+https://github.com/Arman-Mojaver/django-project/tree/main/config
+```
