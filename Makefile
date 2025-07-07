@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 
 .PHONY: help up down build freeze bash migrations migrate pytest superuser-dev \
-        superuser-prod seed-dev seed-prod flush-dev admin pgadmin web setup
+        superuser-prod seed-dev seed-prod flush-dev admin pgadmin web setup nuke
 
 .DEFAULT_GOAL := help
 
@@ -14,7 +14,6 @@ help: ## Show this help message
 	{printf "  %-20s %s\n", $$1, $$2}'
 
 
-# Docker commands
 up:  ## Start containers
 	docker compose -f docker-compose.yml up -d
 
@@ -97,8 +96,10 @@ pgadmin:  ## Open pgadmin
 web:  ## Open web
 	open http://localhost:8000
 
-setup:
+
+setup:  ## Setup project resources
 	@if [ ! -f .env ]; then cp .env.example .env && echo ".env created"; else echo ".env already exists"; fi
+	make build
 	docker compose -f docker-compose.yml up -d db-development db-testing db-production pgadmin
 	@echo "Waiting for PostgreSQL to be ready..."
 	@until docker compose -f docker-compose.yml exec -T db-development sh -c 'pg_isready -U postgres -d db-development | grep "accepting connections" > /dev/null'; do \
@@ -111,9 +112,10 @@ setup:
 	make web
 
 
-nuke:
+nuke:  ## Delete project resources (non-reversible)
 	make down
 	rm -rf .env
 	rm -rf compose/db_development/db_development_data/
 	rm -rf compose/db_production/db_production_data/
 	rm -rf compose/db_testing/db_testing_data/
+	rm -rf compose/pgadmin/pgadmin_data/
