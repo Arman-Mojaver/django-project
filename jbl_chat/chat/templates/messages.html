@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody id="messages-body"
-           hx-get="{% url 'message_list_partial' user_id other_user_id %}"
+           hx-get="/messages/partials/{{ user_id }}/{{ other_user_id }}/"
            hx-trigger="load, every 5s"
            hx-swap="innerHTML">
       <tr><td colspan="5" class="text-center text-gray-500">Loading...</td></tr>
@@ -33,7 +33,7 @@
 
 <form id="message-form"
       class="flex items-center gap-4 bg-base-100 p-4 rounded-lg shadow"
-      hx-post="{% url 'message_create_partial' user_id other_user_id %}"
+      hx-post="/message/partials/{{ user_id }}/{{ other_user_id }}/"
       hx-include="this"
       hx-target="#messages-body"
       hx-swap="beforeend"

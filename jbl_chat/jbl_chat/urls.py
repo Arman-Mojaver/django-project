@@ -40,11 +40,9 @@ urlpatterns = [
     path(
         "messages/partials/<int:user_id>/<int:other_user_id>/",
         message_list_partial,
-        name="message_list_partial",
     ),
     path(
         "message/partials/<int:user_id>/<int:other_user_id>/",
         message_create_partial,
-        name="message_create_partial",
     ),
 ]
