@@ -67,3 +67,9 @@ def test_swap_sender_and_recipient_returns_same_result(
 
     assert response_1.status_code == HTTPStatus.OK
     assert response_2.status_code == HTTPStatus.OK
+
+
+def test_same_user_raises_error(user_sender, message_data_1, client):
+    response = client.get(f"/messages/partials/{user_sender.id}/{user_sender.id}/")
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY

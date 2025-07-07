@@ -55,3 +55,13 @@ def test_create_message(user_sender, user_recipient, message_data_1, client):
     assert db_message.sender_id == message_data_1["sender_id"]
 
     assert response.status_code == HTTPStatus.OK
+
+
+def test_same_user_raises_error(user_sender, message_data_1, client):
+    data = {"content": message_data_1["content"]}
+    response = client.post(
+        f"/message/partials/{user_sender.id}/{user_sender.id}/",
+        data=data,
+    )
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
