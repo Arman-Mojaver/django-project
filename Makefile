@@ -113,6 +113,7 @@ setup:  ## Setup project resources
 		sleep 1; \
 	done
 	docker compose -f docker-compose.yml up -d web
+	sleep 5
 	make migrate
 	make seed-dev
 	make web
